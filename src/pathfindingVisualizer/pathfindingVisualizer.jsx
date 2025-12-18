@@ -48,6 +48,11 @@ const finishNodeCol = startFinishNode[3];
 
 class PathfindingVisualizer extends Component {
   state = {
+    stepMode: false,
+    currentStep: 0,
+    stepVisitedNodes: [],
+    stepShortestPath: [],
+
     grid: [],
     mouseIsPressed: false,
     visualizingAlgorithm: false,
@@ -296,6 +301,69 @@ class PathfindingVisualizer extends Component {
     );
   }, this.state.speed);
 }
+visualizeDijkstraStepMode() {
+  if (this.state.visualizingAlgorithm || this.state.generatingMaze) return;
+
+  const { grid } = this.state;
+  const startNode = grid[startNodeRow][startNodeCol];
+  const finishNode = grid[finishNodeRow][finishNodeCol];
+
+  const startTime = performance.now();
+  const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+  const endTime = performance.now();
+
+  const nodesInShortestPathOrder =
+    getNodesInShortestPathOrderDijkstra(finishNode);
+
+  this.setState({
+    stepMode: true,
+    visualizingAlgorithm: true,
+    currentStep: 0,
+    stepVisitedNodes: visitedNodesInOrder,
+    stepShortestPath: nodesInShortestPathOrder,
+
+    
+    nodesVisited: visitedNodesInOrder.length,
+    pathLength: nodesInShortestPathOrder.length,
+    timeTaken: (endTime - startTime).toFixed(2),
+  });
+}
+
+nextStep() {
+  const {
+    currentStep,
+    stepVisitedNodes,
+    stepShortestPath,
+  } = this.state;
+
+ 
+  if (currentStep >= stepVisitedNodes.length) {
+    this.animateShortestPath(stepShortestPath, stepVisitedNodes);
+    this.setState({
+      stepMode: false,
+      visualizingAlgorithm: false,
+    });
+    return;
+  }
+
+  
+  if (currentStep > 0) {
+    const prevNode = stepVisitedNodes[currentStep - 1];
+    document.getElementById(
+      `node-${prevNode.row}-${prevNode.col}`
+    ).className = "node node-step-visited";
+  }
+
+  
+  const node = stepVisitedNodes[currentStep];
+  document.getElementById(
+    `node-${node.row}-${node.col}`
+  ).className = "node node-step-visited node-current";
+
+  this.setState({ currentStep: currentStep + 1 });
+}
+
+
 
 
   visualizeAStar() {
@@ -534,6 +602,26 @@ class PathfindingVisualizer extends Component {
           clearPath={this.clearPath.bind(this)}
           updateSpeed={this.updateSpeed.bind(this)}
         />
+     <div className="step-controls">
+  <button
+    className="btn btn-step-start"
+    onClick={() => this.visualizeDijkstraStepMode()}
+    disabled={this.state.visualizingAlgorithm}
+  >
+    ▶ Step Mode (Dijkstra)
+  </button>
+
+  {this.state.stepMode && (
+    <button
+      className="btn btn-step-next"
+      onClick={() => this.nextStep()}
+    >
+      ⏭ Next Step
+    </button>
+  )}
+</div>
+
+
         <div className="analytics-panel">
   <h3>Algorithm Stats</h3>
   <p><b>Nodes Visited:</b> {this.state.nodesVisited}</p>
