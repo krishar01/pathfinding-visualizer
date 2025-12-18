@@ -21,3 +21,17 @@
   margin-right: -50%;
   transform: translate(-50%, 2%);
 }
+.analytics-panel {
+  background-color: #1e1e1e;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  width: 220px;
+  margin: 10px auto;
+  font-size: 14px;
+}
+
+.analytics-panel h3 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}

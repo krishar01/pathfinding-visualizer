@@ -58,6 +58,9 @@ class PathfindingVisualizer extends Component {
     numColumns: initialNumColumns,
     speed: 10,
     mazeSpeed: 10,
+    nodesVisited: 0,
+  pathLength: 0,
+  timeTaken: 0,
   };
 
   updateDimensions = () => {
@@ -262,38 +265,71 @@ class PathfindingVisualizer extends Component {
   }
 
   visualizeDijkstra() {
-    if (this.state.visualizingAlgorithm || this.state.generatingMaze) {
-      return;
-    }
-    this.setState({ visualizingAlgorithm: true });
-    setTimeout(() => {
-      const { grid } = this.state;
-      const startNode = grid[startNodeRow][startNodeCol];
-      const finishNode = grid[finishNodeRow][finishNodeCol];
-      const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-      const nodesInShortestPathOrder = getNodesInShortestPathOrderDijkstra(
-        finishNode
-      );
-      this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
-    }, this.state.speed);
+  if (this.state.visualizingAlgorithm || this.state.generatingMaze) {
+    return;
   }
 
+  this.setState({ visualizingAlgorithm: true });
+
+  setTimeout(() => {
+    const { grid } = this.state;
+    const startNode = grid[startNodeRow][startNodeCol];
+    const finishNode = grid[finishNodeRow][finishNodeCol];
+
+    const startTime = performance.now();
+    const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+    const endTime = performance.now();
+
+    const nodesInShortestPathOrder =
+      getNodesInShortestPathOrderDijkstra(finishNode);
+
+    // ✅ analytics update INSIDE same scope
+    this.setState({
+      nodesVisited: visitedNodesInOrder.length,
+      pathLength: nodesInShortestPathOrder.length,
+      timeTaken: (endTime - startTime).toFixed(2),
+    });
+
+    this.animateAlgorithm(
+      visitedNodesInOrder,
+      nodesInShortestPathOrder
+    );
+  }, this.state.speed);
+}
+
+
   visualizeAStar() {
-    if (this.state.visualizingAlgorithm || this.state.generatingMaze) {
-      return;
-    }
-    this.setState({ visualizingAlgorithm: true });
-    setTimeout(() => {
-      const { grid } = this.state;
-      const startNode = grid[startNodeRow][startNodeCol];
-      const finishNode = grid[finishNodeRow][finishNodeCol];
-      const visitedNodesInOrder = astar(grid, startNode, finishNode);
-      const nodesInShortestPathOrder = getNodesInShortestPathOrderAstar(
-        finishNode
-      );
-      this.animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
-    }, this.state.speed);
+  if (this.state.visualizingAlgorithm || this.state.generatingMaze) {
+    return;
   }
+
+  this.setState({ visualizingAlgorithm: true });
+
+  setTimeout(() => {
+    const { grid } = this.state;
+    const startNode = grid[startNodeRow][startNodeCol];
+    const finishNode = grid[finishNodeRow][finishNodeCol];
+
+    const startTime = performance.now();
+    const visitedNodesInOrder = astar(grid, startNode, finishNode);
+    const endTime = performance.now();
+
+    const nodesInShortestPathOrder =
+      getNodesInShortestPathOrderAstar(finishNode);
+
+    this.setState({
+      nodesVisited: visitedNodesInOrder.length,
+      pathLength: nodesInShortestPathOrder.length,
+      timeTaken: (endTime - startTime).toFixed(2),
+    });
+
+    this.animateAlgorithm(
+      visitedNodesInOrder,
+      nodesInShortestPathOrder
+    );
+  }, this.state.speed);
+}
+
 
   visualizeBFS() {
     if (this.state.visualizingAlgorithm || this.state.generatingMaze) {
@@ -304,11 +340,13 @@ class PathfindingVisualizer extends Component {
       const { grid } = this.state;
       const startNode = grid[startNodeRow][startNodeCol];
       const finishNode = grid[finishNodeRow][finishNodeCol];
+      
       const visitedNodesInOrder = breadthFirstSearch(
         grid,
         startNode,
         finishNode
       );
+      
       const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(
         finishNode
       );
@@ -496,6 +534,13 @@ class PathfindingVisualizer extends Component {
           clearPath={this.clearPath.bind(this)}
           updateSpeed={this.updateSpeed.bind(this)}
         />
+        <div className="analytics-panel">
+  <h3>Algorithm Stats</h3>
+  <p><b>Nodes Visited:</b> {this.state.nodesVisited}</p>
+  <p><b>Path Length:</b> {this.state.pathLength}</p>
+  <p><b>Time Taken:</b> {this.state.timeTaken} ms</p>
+</div>
+
         <div
           className={
             this.state.visualizingAlgorithm || this.state.generatingMaze
