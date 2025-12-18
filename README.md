@@ -38,7 +38,7 @@ The visualizer tracks **real-time performance metrics** for selected algorithms:
 - **Shortest Path Length** – number of nodes in the final path  
 - **Execution Time (ms)** – algorithm runtime (excluding animation)
 
-These analytics enable **direct comparison between BFS, Dijkstra, and A\*** on identical grids.
+These analytics enable **direct comparison between Dijkstra, and A\*** on identical grids.
 
 ---
 
@@ -47,7 +47,7 @@ These analytics enable **direct comparison between BFS, Dijkstra, and A\*** on i
 A dedicated **Step Mode** is implemented for **Dijkstra’s Algorithm** to allow detailed inspection of the algorithm’s behavior.
 
 ### Step Mode Visualization States:
-- 🔴 **Red** – current node being explored  
+  
 - 🟡 **Yellow** – nodes visited earlier (step reminder)  
 - 💗 **Pink** – final shortest path  
 
