@@ -75,6 +75,8 @@ This transforms the project into an **algorithm inspection and learning tool**, 
 - CSS
 
 ---
+Additional features (step-mode,algorithm analytics) and enhancements implemented by Krishna Sharma.
+
 
 ## 🧪 Running the Project Locally
 
