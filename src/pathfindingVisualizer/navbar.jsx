@@ -156,11 +156,12 @@ class NavBar extends Component {
     return (
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <a
-          className="navbar-brand h1 mb-0"
-          href="https://rohithaug.github.io/pathfinding-visualizer/"
-        >
-          {brand}
-        </a>
+  className="navbar-brand h1 mb-0"
+  href={process.env.PUBLIC_URL + "/"}
+>
+  {brand}
+</a>
+
         <div className="navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav">
             <li className="nav-item dropdown">
