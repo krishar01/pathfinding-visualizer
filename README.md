@@ -19,6 +19,15 @@ Graphical User Interface built using React Framework to visualize Pathfinding Al
 6. Depth First Search
 7. Random Walk
 
+## Algorithm Analytics
+The visualizer tracks real-time performance metrics:
+- Nodes visited
+- Shortest path length
+- Execution time (ms)
+
+This enables direct comparison Dijkstra, and A* on identical grids.
+
+
 ## Maze Generation Algorithms:
 1. Random Maze
 2. Recursive Division Maze
